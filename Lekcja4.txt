@@ -1,0 +1,25 @@
+Zadanie 1
+SELECT AVG(waga) AS srednia_waga FROM kreatura WHERE rodzaj='wiking';
+SELECT rodzaj, AVG(waga) AS srednia_waga, COUNT(nazwa) AS liczba_kreatur  FROM kreatura GROUP BY rodzaj;
+SELECT rodzaj, AVG(2021-YEAR(dataUr)) AS sredni_wiek FROM kreatura GROUP BY rodzaj;
+Zadanie2
+SELECT rodzaj, SUM(waga) FROM zasob GROUP BY rodzaj;
+SELECT nazwa, AVG(waga) FROM zasob WHERE ilosc>=4  GROUP BY nazwa HAVING SUM(waga)>10 ;
+SELECT rodzaj, COUNT(nazwa) FROM zasob WHERE ilosc>1 GROUP BY rodzaj;
+
+Zadanie3
+SELECT kreatura.nazwa , SUM(ekwipunek.ilosc) FROM kreatura INNER JOIN ekwipunek ON kreatura.idKreatury = ekwipunek.idKreatury GROUP BY nazwa;
+SELECT DISTINCT kreatura.nazwa , zasob.nazwa FROM kreatura JOIN ekwipunek LEFT OUTER JOIN zasob ON kreatura.idKreatury = ekwipunek.idKreatury AND zasob.idZasobu=ekwipunek.idZasobu WHERE zasob.nazwa IS NOT NULL;
+SELECT * FROM kreatura WHERE idKreatury NOT IN (SELECT idKreatury FROM ekwipunek WHERE idKreatury IS NOT NULL) ;
+ 
+ Zadanie4
+ SELECT DISTINCT kreatura.nazwa, zasob.nazwa FROM kreatura NATURAL JOIN ekwipunek  NATURAL JOIN zasob WHERE kreatura.rodzaj="wiking" AND YEAR(dataUr) BETWEEN 1770 AND 1779;
+SELECT kreatura.nazwa FROM kreatura JOIN ekwipunek LEFT OUTER JOIN zasob ON kreatura.idKreatury = ekwipunek.idKreatury AND zasob.idZasobu=ekwipunek.idZasobu WHERE zasob.rodzaj="jedzenie" ORDER BY dataUr DESC LIMIT 5;
+SELECT a.nazwa , b.nazwa FROM kreatura a LEFT JOIN kreatura b ON a.idKreatury=b.idKreatury-5; 
+
+Zadanie5
+SELECT kreatura.rodzaj, AVG(zasob.waga*zasob.ilosc) FROM kreatura JOIN ekwipunek LEFT OUTER JOIN zasob ON kreatura.idKreatury = ekwipunek.idKreatury AND zasob.idZasobu=ekwipunek.idZasobu WHERE kreatura.rodzaj!="malpa" AND kreatura.rodzaj!="waz" AND ekwipunek.ilosc<30 GROUP BY kreatura.rodzaj;
+
+SELECT k1.rodzaj , k1.nazwa , mlodzi.minimalna_data, k2.nazwa , mlodzi.maksymalna_data FROM (SELECT rodzaj, MIN(dataUr) AS minimalna_data, MAX(dataUr) AS maksymalna_data FROM kreatura GROUP BY rodzaj) AS mlodzi,  JOIN kreatura k1 ON mlodzi.rodzaj = k1.rodzaj AND mlodzi.minimalna_data = k1.dataUr JOIN kreatura k2 ON mlodzi.rodzaj=k2.rodzaj AND mlodzi.maksymalna_data=k2.dataUr;
+
+SELECT rodzaj , MAX(waga) FROM kreatura AS  k1 WHERE waga !=(SELECT  MAX(waga) AS maksywalna_waga FROM kreatura WHERE rodzaj = k1.rodzaj) GROUP BY rodzaj ;
